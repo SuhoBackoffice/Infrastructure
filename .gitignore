@@ -1,0 +1,9 @@
+/suho-application-key.pem
+/suho-application-key.pem.pub
+
+.idea
+.terraform
+
+*.tfstate
+*.tfstate.*
+terraform.tfvars
