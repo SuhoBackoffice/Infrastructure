@@ -12,7 +12,6 @@ proxy_set_header X-Forwarded-Proto $scheme;
 # WebSocket/HMR 대응(Next.js 등)
 proxy_set_header Upgrade $http_upgrade;
 proxy_set_header Connection "upgrade";
-proxy_set_header Cookie \$http_cookie;
 client_max_body_size 20m;
 CONF
 
