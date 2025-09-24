@@ -1,4 +1,6 @@
-# Nginx & Certbot
+#!/bin/bash
+
+# Nginx & Certbot 설치
 apt-get update -y
 apt-get install -y nginx certbot python3-certbot-nginx
 
@@ -18,10 +20,19 @@ CONF
 # 기본 서버 블록 구성
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 cat >/etc/nginx/sites-available/default <<'EOT'
+# Redirect (suhotech.co.kr -> www.suhotech.co.kr)
+server {
+    listen 80;
+    server_name suhotech.co.kr;
+    # $request_uri 변수는 사용자가 요청한 경로와 파라미터를 그대로 유지해줍니다.
+    # 예: suhotech.co.kr/about?id=1 -> www.suhotech.co.kr/about?id=1
+    return 301 https://www.suhotech.co.kr$request_uri;
+}
+
 # Front (Next.js :3000)
 server {
     listen 80;
-    server_name suhotech.co.kr www.suhotech.co.kr;
+    server_name www.suhotech.co.kr;
 
     location /_next/ {
         proxy_pass http://127.0.0.1:3000;
@@ -46,6 +57,7 @@ server {
 }
 EOT
 
+# Nginx 설정 테스트 및 리로드
 nginx -t && systemctl reload nginx
 
 # Certbot - 세 도메인 모두 인증서 발급 + HTTP->HTTPS 리다이렉트 자동 설정
